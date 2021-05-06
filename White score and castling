@@ -1,0 +1,158 @@
+# White score taking castling into account in Sicilian games
+# 100 points ranges.
+import pandas as pd
+import matplotlib.pyplot as plt
+from pandas.plotting import parallel_coordinates
+import chess.pgn
+import matplotlib
+import numpy as np
+
+def DidWhiteCastle ( Moves):
+    res = "No"
+    if Moves.find(". O-O ") != -1 or Moves.find(". O - O") != -1 :
+        res =  "O-O"
+    elif Moves.find(". O-O-O") != -1 or Moves.find(". O - O - O") != -1 :
+        res = "O-O-O"
+    return res 
+
+
+data = open('chessdata.pgn', encoding="utf-8")
+N = 795173
+X= [1050+j*100 for j in range(18)]
+m = len(X)
+Num_games_LC = [0]*m
+Wins_Long_Castle = [0]*m
+Draws_Long_Castle = [0]*m
+
+Num_games_SC = [0]*m
+Wins_Short_Castle = [0]*m
+Draws_Short_Castle = [0]*m
+
+Num_games_no =[0]*m
+Wins_No_Castle = [0]*m
+Draws_No_Castle = [0]*m
+
+#index = -1
+#for i in range(N):
+ #       game = chess.pgn.read_game(data)
+  #      Moves = str(game.mainline_moves())
+   #     if Moves[0:8] == '1. e4 c5': # i.e., if the opening is Sicilian
+    #        if game.headers["BlackElo"].find("?") == -1 and game.headers["WhiteElo"].find("?") == -1 :
+     #             for j in range(18):
+      #                 if (int(game.headers["WhiteElo"])+int(game.headers["BlackElo"]))/2.0 in (1000+j*100,1000+(j+1)*100):    
+       #                   index = j
+        #                  break
+         #         if DidWhiteCastle(Moves) == "O-O-O":    
+          #                 Num_games_LC[index] = Num_games_LC[index] + 1
+           #                if game.headers["Result"] == "1-0":
+            #                  Wins_Long_Castle[index] = Wins_Long_Castle[index] + 1
+             #              elif game.headers["Result"] == "1/2-1/2":
+              #                Draws_Long_Castle[index] = Draws_Long_Castle[index] + 1
+               #   elif DidWhiteCastle(Moves) == 'O-O':
+                #          Num_games_SC[index] = Num_games_SC[index] + 1
+                 #         if game.headers["Result"] == "1-0":
+                  #            Wins_Short_Castle[index] = Wins_Short_Castle[index] + 1 
+                   #       elif game.headers["Result"] == "1/2-1/2":
+                    #          Draws_Short_Castle[index] = Draws_Short_Castle[index] + 1
+                 # else:
+                  #        Num_games_no[index] = Num_games_no[index] + 1 
+                   #       if game.headers["Result"]=="1-0":
+                    #          Wins_No_Castle[index] = Wins_No_Castle[index] + 1
+                     #     elif game.headers["Result"] == "1/2-1/2":
+                      #        Draws_No_Castle[index] = Draws_No_Castle[index] + 1
+
+
+#print("Num_Games_LOng: ", Num_games_LC,"\n")
+#print("Wins LC: ",Wins_Long_Castle,"\n")
+#print("Draws LC: ",Draws_Long_Castle,"\n")
+#print("Num Games SC: ",Num_games_SC,"\n")
+#print("Wins SC: ",Wins_Short_Castle,"\n")
+#print("Draws SC: ",Draws_Short_Castle,"\n")
+#print("Num Games No: ", Num_games_no,"\n")
+#print("Wins No: ",Wins_No_Castle,"\n")
+#print("Draws No: ",Draws_No_Castle)
+
+
+Num_games_LC = [7, 80, 245, 801, 1830, 1203, 1195, 1183, 881, 522, 118, 33,  11,  26]
+Num_games_SC = [81, 436, 1487, 4954, 11256, 7381, 7333, 7265, 5409, 3284, 643, 142, 144,  124]
+Num_games_no = [15, 108, 369, 1042, 2486, 1558, 1548, 1611, 1115, 648, 175, 32, 35, 25]
+
+Wins_Long_Castle=[3, 45, 139, 386, 927, 589, 611, 578, 432, 253, 59, 24,  4,  15]
+Wins_Short_Castle=[44, 203, 722, 2371, 5355, 3558, 3455, 3457, 2583, 1568, 303, 61,  66,  60]
+Wins_No_Castle=[7, 49, 167, 416, 1016, 640, 642, 682, 471, 273, 78, 16,  14,  5]
+
+Draws_Long_Castle=[0, 1, 6, 24, 67, 43, 36, 38, 21, 14, 0, 1,  1,  0]
+Draws_Short_Castle=[2, 15, 58, 194, 405, 265, 262, 261, 203, 120, 21, 5, 4,  5]
+Draws_No_Castle=[0, 1, 4, 23, 57, 38, 33, 39, 29, 12, 4, 1,  2,  0]
+
+X2 = [1050,1150,1250,1350,1450,1550,1650,1750,1850,1950,2050,2150,2350,2750]
+m = len(X2)
+Scores_LC = [0]*m
+Scores_SC = [0]*m
+Scores_No = [0]*m
+for j in range(m):
+     Scores_LC[j] = round(100*Wins_Long_Castle[j]/float(Num_games_LC[j]) + 50* Draws_Long_Castle[j]/float(Num_games_LC[j]),2)
+     Scores_SC[j] = round(100*Wins_Short_Castle[j]/float(Num_games_SC[j]) + 50*Draws_Short_Castle[j]/float(Num_games_SC[j]),2)
+     Scores_No[j] = round(100*Wins_No_Castle[j]/float(Num_games_no[j])+50*Draws_No_Castle[j]/float(Num_games_no[j])   ,2) 
+
+plt.plot(X2, Scores_LC , color="black", marker="o",label="O-O-O")
+plt.xticks(ticks=X2,rotation=45)
+plt.yticks(ticks = [20+5*j for j in range(13)])
+plt.xlabel("The average of the two players",fontweight="heavy")
+plt.ylabel("White Score % = wins % + 1/2 draws %",fontweight="heavy")
+plt.ylim(18,80)
+plt.title("White Score in Sicilian Games in correlation with White Castling",fontweight="heavy")
+plt.plot(X2, Scores_SC ,color="yellow",marker="o",label="O-O")
+plt.plot(X2,Scores_No,color="red",marker="o",label="No Castling" )
+plt.legend()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
