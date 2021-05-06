@@ -100,7 +100,21 @@ for i in range(N):
                Variation2.append(y)
             else:
                break        
-   
+# after executing this code, I copied the results into a csv file named "try3.csv" in order to use this file to make the parallel coordinates chart:
+
+data = pd.read_csv('trying3.csv', encoding="utf-8")
+ax = plt.subplot()
+ax2 = ax.twinx()
+plt.yticks([-8,0,8],labels=["loss","draw","win"],) 
+pd.plotting.parallel_coordinates(data,"White Castling",alpha = 0.9,marker="o")
+plt.title("The first 150 Sicilian Games", fontweight='heavy')
+mystr = """Var -8:Kan,-7:Taimanov, -6:Kalashnikov, -5:Pelikan,
+ -4:Classical, -3:Dragon, -2:Accelerated Dragon, -1:Najdorf,
+ 0:Scheveningen, 1:Rossolimo, 2:Moscow, 3:Grand Prix, 4:Closed, 
+5:Alapin, 6:Smith-Morra, 7:Wing Gambit, 8:Sidelines"""
+
+ax.set_xlabel(mystr)
+ax.set_ylim(-10,10)
     
     
     
