@@ -94,6 +94,8 @@ for j in range(m):
      Scores_LC[j] = round(100*Wins_Long_Castle[j]/float(Num_games_LC[j]) + 50* Draws_Long_Castle[j]/float(Num_games_LC[j]),2)
      Scores_SC[j] = round(100*Wins_Short_Castle[j]/float(Num_games_SC[j]) + 50*Draws_Short_Castle[j]/float(Num_games_SC[j]),2)
      Scores_No[j] = round(100*Wins_No_Castle[j]/float(Num_games_no[j])+50*Draws_No_Castle[j]/float(Num_games_no[j])   ,2) 
+     
+# I copied the results of the scores to a csv file named "scores.csv"
 
 plt.plot(X2, Scores_LC , color="black", marker="o",label="O-O-O")
 plt.xticks(ticks=X2,rotation=45)
